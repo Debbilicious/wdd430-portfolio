@@ -1,3 +1,9 @@
+## Live Site
+https://wdd430-portfolio-phi.vercel.app/
+
+## GitHub Repository
+https://github.com/Debbilicious/wdd430-portfolio
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
