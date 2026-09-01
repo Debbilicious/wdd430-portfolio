@@ -8,7 +8,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ title, description, technologies, link }: ProjectCardProps) {
   return (
     <article className="p-4 border-l-4 border-blue-600 bg-gray-50 rounded">
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
+      <h2 className="text-xl font-bold mb-2">{title}</h2>
       <p className="text-gray-700 mb-3">{description}</p>
       <p className="text-sm text-gray-600">
         <strong>Technologies:</strong> {technologies.join(', ')}
