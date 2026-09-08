@@ -10,7 +10,7 @@ export default function SkillCard({ skills }: SkillCardProps) {
         {skills.map((skill) => (
           <li
             key={skill}
-            className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full"
+            className="bg-blue-700 text-white text-sm px-3 py-1 rounded-full"
           >
             {skill}
           </li>
