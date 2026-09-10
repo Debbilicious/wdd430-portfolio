@@ -1,11 +1,7 @@
-async function getOpenSourceProjects() {
-  const res = await fetch('http://localhost:3000/api/projects?type=opensource', { cache: 'no-store' });
-  const data = await res.json();
-  return data.projects;
-}
+import { getProjects } from "@/lib/projects-db";
 
-export default async function OpenSourceProjects() {
-  const projects = await getOpenSourceProjects();
+export default function OpenSourceProjects() {
+  const projects = getProjects("opensource");
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
@@ -14,7 +10,7 @@ export default async function OpenSourceProjects() {
         <p className="text-lg">No open source projects yet — check back soon!</p>
       ) : (
         <ul className="space-y-2">
-          {projects.map((project: { id: number; title: string }) => (
+          {projects.map((project) => (
             <li key={project.id} className="text-lg">{project.title}</li>
           ))}
         </ul>

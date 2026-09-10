@@ -1,11 +1,7 @@
-async function getAllProjects() {
-  const res = await fetch('http://localhost:3000/api/projects', { cache: 'no-store' });
-  const data = await res.json();
-  return data.projects;
-}
+import { getProjects } from "@/lib/projects-db";
 
-export default async function ProjectsOverview() {
-  const projects = await getAllProjects();
+export default function ProjectsOverview() {
+  const projects = getProjects();
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
@@ -14,7 +10,7 @@ export default async function ProjectsOverview() {
         A collection of projects I&apos;ve built, organized by open source contributions and school coursework.
       </p>
       <ul className="space-y-2">
-        {projects.map((project: { id: number; title: string }) => (
+        {projects.map((project) => (
           <li key={project.id} className="text-lg">
             {project.title}
           </li>
