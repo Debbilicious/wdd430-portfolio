@@ -1,5 +1,7 @@
 import { getProjects } from "@/lib/projects-db";
 
+export const dynamic = 'force-dynamic';
+
 export default async function OpenSourceProjects() {
   const projects = await getProjects("opensource");
 
