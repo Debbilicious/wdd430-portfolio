@@ -1,18 +1,24 @@
-import { getProjects } from "@/lib/projects-db";
+import { Suspense } from "react";
+import SchoolProjectList from "@/components/SchoolProjectList";
 
-export const dynamic = 'force-dynamic';
+function ListSkeleton() {
+  return (
+    <div className="space-y-2 animate-pulse">
+      <div className="h-6 w-2/3 rounded bg-gray-200" />
+      <div className="h-6 w-1/2 rounded bg-gray-200" />
+      <div className="h-6 w-3/5 rounded bg-gray-200" />
+      <div className="h-6 w-2/5 rounded bg-gray-200" />
+    </div>
+  );
+}
 
-export default async function SchoolProjects() {
-  const projects = await getProjects("school");
-
+export default function SchoolProjects() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">School Projects</h2>
-      <ul className="space-y-2">
-        {projects.map((project) => (
-          <li key={project.id} className="text-lg">{project.title}</li>
-        ))}
-      </ul>
+      <Suspense fallback={<ListSkeleton />}>
+        <SchoolProjectList />
+      </Suspense>
     </main>
   );
 }
