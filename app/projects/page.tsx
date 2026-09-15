@@ -1,7 +1,7 @@
 import { getProjects } from "@/lib/projects-db";
 
-export default function ProjectsOverview() {
-  const projects = getProjects();
+export default async function ProjectsOverview() {
+  const projects = await getProjects();
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
