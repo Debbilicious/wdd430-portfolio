@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { fetchFilteredProjects, fetchProjectsPages } from "@/lib/projects-db";
 import ProjectSearch from "@/components/ProjectSearch";
 import Pagination from "@/components/Pagination";
+import { deleteProject } from "@/app/lib/actions";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,15 +26,36 @@ export default async function ProjectsOverview(props: {
       {projects.length === 0 ? (
         <p className="text-lg">No projects found.</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-4">
           {projects.map((project) => (
-            <li key={project.id} className="text-lg">
-              {project.title}
+            <li key={project.id} className="border border-gray-200 rounded p-4">
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-medium">{project.title}</span>
+                <div className="flex gap-3">
+                  <Link
+                    href={`/projects/${project.id}/edit`}
+                    className="text-blue-700 hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <form action={deleteProject.bind(null, String(project.id))}>
+                    <button type="submit" className="text-red-600 hover:underline">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
       )}
       <Pagination totalPages={totalPages} />
+      <Link
+        href="/projects/create"
+        className="inline-block mt-6 bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800"
+      >
+        Add New Project
+      </Link>
     </main>
   );
 }
