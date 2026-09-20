@@ -11,10 +11,15 @@ export async function createProject(formData: FormData) {
 
   const techArray = technologies.split(',').map((t) => t.trim());
 
-  await sql`
-    INSERT INTO projects (title, description, type, technologies)
-    VALUES (${title}, ${description}, 'school', ${techArray})
-  `;
+  try {
+    await sql`
+      INSERT INTO projects (title, description, type, technologies)
+      VALUES (${title}, ${description}, 'school', ${techArray})
+    `;
+  } catch (error) {
+    console.error('Error creating project:', error);
+    throw new Error('Failed to create project. Please try again later.');
+  }
 
   revalidatePath('/projects');
   redirect('/projects');
@@ -27,17 +32,27 @@ export async function updateProject(id: string, formData: FormData) {
 
   const techArray = technologies.split(',').map((t) => t.trim());
 
-  await sql`
-    UPDATE projects
-    SET title = ${title}, description = ${description}, technologies = ${techArray}
-    WHERE id = ${id}
-  `;
+  try {
+    await sql`
+      UPDATE projects
+      SET title = ${title}, description = ${description}, technologies = ${techArray}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    console.error('Error updating project:', error);
+    throw new Error('Failed to update project. Please try again later.');
+  }
 
   revalidatePath('/projects');
   redirect('/projects');
 }
 
 export async function deleteProject(id: string) {
-  await sql`DELETE FROM projects WHERE id = ${id}`;
-  revalidatePath('/projects');
+  try {
+    await sql`DELETE FROM projects WHERE id = ${id}`;
+    revalidatePath('/projects');
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    throw new Error('Failed to delete project. Please try again later.');
+  }
 }
