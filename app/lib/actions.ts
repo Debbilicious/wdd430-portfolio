@@ -1,46 +1,86 @@
 'use server';
 
+import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export async function createProject(formData: FormData) {
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
-  const technologies = formData.get('technologies') as string;
+const ProjectFormSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 characters.'),
+  description: z.string().min(20, 'Description must be at least 20 characters.'),
+  technologies: z.string().min(2, 'Add at least one technology.'),
+});
 
+export type State = {
+  errors?: {
+    title?: string[];
+    description?: string[];
+    technologies?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createProject(prevState: State, formData: FormData): Promise<State> {
+  const validatedFields = ProjectFormSchema.safeParse({
+    title: formData.get('title'),
+    description: formData.get('description'),
+    technologies: formData.get('technologies'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing or invalid fields. Failed to create project.',
+    };
+  }
+
+  const { title, description, technologies } = validatedFields.data;
   const techArray = technologies.split(',').map((t) => t.trim());
 
   try {
     await sql`
       INSERT INTO projects (title, description, type, technologies)
-      VALUES (${title}, ${description}, 'school', ${techArray})
+      VALUES (${title}, ${description}, 'school', ${techArray as any})
     `;
   } catch (error) {
     console.error('Error creating project:', error);
-    throw new Error('Failed to create project. Please try again later.');
+    return { message: 'Database Error: Failed to create project.' };
   }
 
   revalidatePath('/projects');
   redirect('/projects');
 }
 
-export async function updateProject(id: string, formData: FormData) {
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
-  const technologies = formData.get('technologies') as string;
+export async function updateProject(
+  id: string,
+  prevState: State,
+  formData: FormData
+): Promise<State> {
+  const validatedFields = ProjectFormSchema.safeParse({
+    title: formData.get('title'),
+    description: formData.get('description'),
+    technologies: formData.get('technologies'),
+  });
 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing or invalid fields. Failed to update project.',
+    };
+  }
+
+  const { title, description, technologies } = validatedFields.data;
   const techArray = technologies.split(',').map((t) => t.trim());
 
   try {
     await sql`
       UPDATE projects
-      SET title = ${title}, description = ${description}, technologies = ${techArray}
+      SET title = ${title}, description = ${description}, technologies = ${techArray as any}
       WHERE id = ${id}
     `;
   } catch (error) {
     console.error('Error updating project:', error);
-    throw new Error('Failed to update project. Please try again later.');
+    return { message: 'Database Error: Failed to update project.' };
   }
 
   revalidatePath('/projects');

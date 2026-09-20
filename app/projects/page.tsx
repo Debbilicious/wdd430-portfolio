@@ -39,7 +39,7 @@ export default async function ProjectsOverview(props: {
                     Edit
                   </Link>
                   <form action={deleteProject.bind(null, String(project.id))}>
-                    <button type="submit" className="text-red-600 hover:underline">
+                    <button type="submit" className="text-red-700 hover:underline">
                       Delete
                     </button>
                   </form>

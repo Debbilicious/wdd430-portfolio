@@ -21,7 +21,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       <Link
         href={createPageURL(currentPage - 1)}
         className={`px-3 py-1 border rounded ${
-          currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-100'
+          currentPage <= 1 ? 'pointer-events-none text-gray-600 cursor-not-allowed' : 'hover:bg-gray-100'
         }`}
       >
         Previous
@@ -32,7 +32,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       <Link
         href={createPageURL(currentPage + 1)}
         className={`px-3 py-1 border rounded ${
-          currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-100'
+          currentPage >= totalPages ? 'pointer-events-none text-gray-600 cursor-not-allowed' : 'hover:bg-gray-100'
         }`}
       >
         Next

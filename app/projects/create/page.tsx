@@ -1,18 +1,31 @@
-import { createProject } from '@/app/lib/actions';
+'use client';
+
+import { useActionState } from 'react';
+import { createProject, type State } from '@/app/lib/actions';
+
+const initialState: State = { message: null, errors: {} };
 
 export default function CreateProjectPage() {
+  const [state, formAction, isPending] = useActionState(createProject, initialState);
+
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-6">Add New Project</h1>
-      <form action={createProject} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <div>
           <label htmlFor="title" className="block mb-1 font-medium">Title</label>
           <input
             id="title"
             name="title"
             required
+            aria-describedby="title-error"
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
+          <div id="title-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.title?.map((error) => (
+              <p key={error} className="mt-1 text-sm text-red-600">{error}</p>
+            ))}
+          </div>
         </div>
 
         <div>
@@ -22,8 +35,14 @@ export default function CreateProjectPage() {
             name="description"
             required
             rows={4}
+            aria-describedby="description-error"
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
+          <div id="description-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.description?.map((error) => (
+              <p key={error} className="mt-1 text-sm text-red-600">{error}</p>
+            ))}
+          </div>
         </div>
 
         <div>
@@ -35,15 +54,24 @@ export default function CreateProjectPage() {
             name="technologies"
             required
             placeholder="React, TypeScript, Tailwind"
+            aria-describedby="technologies-error"
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
+          <div id="technologies-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.technologies?.map((error) => (
+              <p key={error} className="mt-1 text-sm text-red-600">{error}</p>
+            ))}
+          </div>
         </div>
+
+        {state.message ? <p className="text-sm text-red-600">{state.message}</p> : null}
 
         <button
           type="submit"
-          className="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800"
+          disabled={isPending}
+          className="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Save Project
+          {isPending ? 'Saving...' : 'Save Project'}
         </button>
       </form>
     </main>
